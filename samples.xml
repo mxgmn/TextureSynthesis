@@ -1,0 +1,24 @@
+<samples>
+	<sample name="sand1" indexed="False" K="0" N="3" screenshots="2" temperature="1.0" OW="46" OH="46"/>
+	<sample name="sand2" indexed="False" K="0" N="3" screenshots="2" temperature="1.0" OW="46" OH="46"/>
+	<sample name="mountains" indexed="True" K="3" N="2" screenshots="2" temperature="1.0" OW="400" OH="400"/>
+	<sample name="hills" indexed="True" K="3" N="2" screenshots="2" temperature="1.0" OW="400" OH="400"/>
+	<sample name="grass" indexed="True" K="3" N="2" screenshots="2" temperature="1.0" OW="400" OH="400"/>
+	<sample name="forest" indexed="True" K="4" N="2" screenshots="2" temperature="1.0" OW="400" OH="400"/>
+	<sample name="water3" indexed="True" K="4" N="3" screenshots="2" temperature="1.0" OW="400" OH="400"/>
+	<sample name="shallows" indexed="True" K="4" N="3" screenshots="2" temperature="1.0" OW="400" OH="400"/>
+	<sample name="lava" indexed="False" K="3" N="3" screenshots="2" temperature="1.0" OW="32" OH="32"/>
+	<sample name="lava" indexed="False" K="0" N="3" screenshots="2" temperature="1.0" OW="32" OH="32"/>
+	<sample name="stones" indexed="True" K="3" N="3" screenshots="2" temperature="1.0" OW="32" OH="32"/>
+	<sample name="stones" indexed="False" K="0" N="3" screenshots="2" temperature="1.0" OW="32" OH="32"/>
+	<sample name="water1" indexed="True" K="4" N="3" screenshots="2" temperature="1.0" OW="32" OH="32"/>
+	<sample name="wall" indexed="False" K="0" N="2" screenshots="2" temperature="1.0" OW="32" OH="32"/>
+	<sample name="wall" indexed="True" K="2" N="3" screenshots="2" temperature="1.0" OW="32" OH="32"/>
+	<sample name="vines" indexed="True" K="3" N="2" screenshots="2" temperature="1.0" OW="32" OH="32"/>
+	<sample name="vines" indexed="True" K="0" N="3" screenshots="2" temperature="1.0" OW="32" OH="32"/>
+	<sample name="vines" indexed="False" K="0" N="2" screenshots="2" temperature="1.0" OW="32" OH="32"/>
+	<sample name="redfoam" indexed="False" K="0" N="3" screenshots="2" temperature="1.0" OW="32" OH="32"/>
+	<sample name="redfoam" indexed="False" K="0" N="2" screenshots="2" temperature="1.0" OW="32" OH="32"/>
+	<sample name="water2" indexed="False" K="0" N="3" screenshots="2" temperature="1.0" OW="48" OH="48"/>
+	<sample name="water2" indexed="False" K="3" N="3" screenshots="2" temperature="1.0" OW="48" OH="48"/>
+</samples>
