@@ -1,24 +1,39 @@
 <samples>
-	<sample name="sand1" indexed="False" K="0" N="3" screenshots="2" temperature="1.0" OW="46" OH="46"/>
-	<sample name="sand2" indexed="False" K="0" N="3" screenshots="2" temperature="1.0" OW="46" OH="46"/>
-	<sample name="mountains" indexed="True" K="3" N="2" screenshots="2" temperature="1.0" OW="400" OH="400"/>
-	<sample name="hills" indexed="True" K="3" N="2" screenshots="2" temperature="1.0" OW="400" OH="400"/>
-	<sample name="grass" indexed="True" K="3" N="2" screenshots="2" temperature="1.0" OW="400" OH="400"/>
-	<sample name="forest" indexed="True" K="4" N="2" screenshots="2" temperature="1.0" OW="400" OH="400"/>
-	<sample name="water3" indexed="True" K="4" N="3" screenshots="2" temperature="1.0" OW="400" OH="400"/>
-	<sample name="shallows" indexed="True" K="4" N="3" screenshots="2" temperature="1.0" OW="400" OH="400"/>
-	<sample name="lava" indexed="False" K="3" N="3" screenshots="2" temperature="1.0" OW="32" OH="32"/>
-	<sample name="lava" indexed="False" K="0" N="3" screenshots="2" temperature="1.0" OW="32" OH="32"/>
-	<sample name="stones" indexed="True" K="3" N="3" screenshots="2" temperature="1.0" OW="32" OH="32"/>
-	<sample name="stones" indexed="False" K="0" N="3" screenshots="2" temperature="1.0" OW="32" OH="32"/>
-	<sample name="water1" indexed="True" K="4" N="3" screenshots="2" temperature="1.0" OW="32" OH="32"/>
-	<sample name="wall" indexed="False" K="0" N="2" screenshots="2" temperature="1.0" OW="32" OH="32"/>
-	<sample name="wall" indexed="True" K="2" N="3" screenshots="2" temperature="1.0" OW="32" OH="32"/>
-	<sample name="vines" indexed="True" K="3" N="2" screenshots="2" temperature="1.0" OW="32" OH="32"/>
-	<sample name="vines" indexed="True" K="0" N="3" screenshots="2" temperature="1.0" OW="32" OH="32"/>
-	<sample name="vines" indexed="False" K="0" N="2" screenshots="2" temperature="1.0" OW="32" OH="32"/>
-	<sample name="redfoam" indexed="False" K="0" N="3" screenshots="2" temperature="1.0" OW="32" OH="32"/>
-	<sample name="redfoam" indexed="False" K="0" N="2" screenshots="2" temperature="1.0" OW="32" OH="32"/>
-	<sample name="water2" indexed="False" K="0" N="3" screenshots="2" temperature="1.0" OW="48" OH="48"/>
-	<sample name="water2" indexed="False" K="3" N="3" screenshots="2" temperature="1.0" OW="48" OH="48"/>
+	<re name="lava" N="2" width="100" height="100" indexed="True"/>
+	<re name="water1" N="3"/>
+	<re name="forest1" N="1" width="400" height="400" screenshots="3"/>
+	<re name="forest1" N="2" width="400" height="400" M="5"/>	
+	<re name="forest1" N="3" polish="3" width="400" height="400"/>
+	<re name="cobbles48" N="3" polish="6" width="400" height="400"/>
+	<re name="water3" N="3"/>
+	<re name="water4" N="6"/>
+	<re name="brocks" N="1"/>
+	<re name="brocks" N="2"/>
+	<re name="forest2" N="1"/>
+	<re name="forest2" N="2"/>	
+	<re name="forest2" N="4"/>
+	<re name="bluehalls" N="1" polish="5"/>
+	<re name="skulls" N="3"/>
+	<re name="strangegrass" N="3"/>
+	<re name="grass48" N="1"/>
+	<re name="sword" N="6"/>
+	<re name="redfoam" N="1" width="300" height="300" screenshots="3"/>
+	<re name="redfoam" N="2" width="300" height="300" screenshots="3"/>
+	<re name="redfoam" N="3" width="300" height="300" screenshots="3"/>
+	<coherent name="mountains" indexed="True" K="3" N="2" screenshots="2" width="400" height="400"/>
+	<coherent name="hills" indexed="True" K="3" N="2" screenshots="2" width="400" height="400"/>
+	<coherent name="grass" indexed="True" K="3" N="2" screenshots="2" width="400" height="400"/>
+	<coherent name="forest1" indexed="True" K="4" N="2" screenshots="2" width="400" height="400"/>
+	<coherent name="water3" indexed="True" K="4" N="3" screenshots="2" width="400" height="400"/>
+	<coherent name="shallows" indexed="True" K="4" N="3" screenshots="2" width="400" height="400"/>
+	<full name="sand1" indexed="False" N="3" screenshots="2" width="46" height="46"/>
+	<full name="sand2" indexed="False" N="3" screenshots="2" width="46" height="46"/>
+	<full name="lava" indexed="False" N="3" screenshots="2" width="32" height="32"/>
+	<full name="stones" indexed="False" N="3" screenshots="2" width="32" height="32"/>
+	<full name="wall" indexed="False" N="2" screenshots="2" width="32" height="32"/>
+	<full name="vines" indexed="True" N="3" screenshots="2" width="32" height="32"/>
+	<full name="vines" indexed="False" N="2" screenshots="2" width="32" height="32"/>
+	<full name="redfoam" indexed="False" N="3" screenshots="2" width="32" height="32"/>
+	<full name="redfoam" indexed="False" N="2" screenshots="2" width="32" height="32"/>
+	<full name="water2" indexed="False" N="3" screenshots="4" width="48" height="48"/>
 </samples>

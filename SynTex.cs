@@ -13,50 +13,70 @@ using System;
 using System.Xml;
 using System.Linq;
 using System.Drawing;
+using System.Diagnostics;
 using System.ComponentModel;
 using System.Collections.Generic;
 
-class Program
+static class Program
 {
-	static void Main(string[] args)
+	static void Main()
 	{
+		Stopwatch sw = Stopwatch.StartNew();
 		var xdoc = new XmlDocument();
 		xdoc.Load("samples.xml");
 		int pass = 1;
 
 		for (var xnode = xdoc.FirstChild.FirstChild; xnode != null; xnode = xnode.NextSibling)
 		{
-			string name = xnode.Get("name", "");
-			int K = xnode.Get("K", 1), N = xnode.Get("N", 1), OW = xnode.Get("OW", 32), OH = xnode.Get("OH", 32);
+			string name = xnode.Get("name", ""), method = xnode.Name;
+			int K = xnode.Get("K", 1), N = xnode.Get("N", 1), M = xnode.Get("M", 20), polish = xnode.Get("polish", 3), OW = xnode.Get("width", 32), OH = xnode.Get("height", 32);
 			bool indexed = xnode.Get("indexed", true);
 			double t = xnode.Get("temperature", 1.0);
 
-			Bitmap sample = new Bitmap("Samples/" + name + ".bmp");
+			Bitmap sample = new Bitmap($"Samples/{name}.bmp");
 			List<int>[] similaritySets = null;
 
 			int[] sampleArray = new int[sample.Width * sample.Height];
 			for (int j = 0; j < sample.Width * sample.Height; j++) sampleArray[j] = sample.GetPixel(j % sample.Width, j / sample.Width).ToArgb();
-			
-			if (K > 0)
+
+			if (method == "coherent")
 			{
-				Console.WriteLine("< " + name);
+				Console.WriteLine($"< {name}");
 				similaritySets = Analysis(sampleArray, sample.Width, sample.Height, K, N, indexed);
 			}
 
 			for (int i = 0; i < xnode.Get("screenshots", 1); i++)
 			{
-				Console.WriteLine("> " + name + " " + i);
+				Console.WriteLine($"> {name} {i}");
+				string filename = $"{pass} {method} {name} {indexed} N={N} ";
+				int[] outputArray;
 
-				int[] outputArray = K > 0 ? CoherentSynthesis(sampleArray, sample.Width, sample.Height, similaritySets, N, OW, OH, t, indexed) :
-					FullSynthesis(sampleArray, sample.Width, sample.Height, N, OW, OH, t, indexed); 
+				if (method == "full")
+				{
+					outputArray = FullSynthesis(sampleArray, sample.Width, sample.Height, N, OW, OH, t, indexed);
+					filename += $"t={t}";
+				}
+				else if (method == "coherent")
+				{
+					outputArray = CoherentSynthesis(sampleArray, sample.Width, sample.Height, similaritySets, N, OW, OH, t, indexed);
+					filename += $"K={K} t={t}";
+				}
+				else if (method == "re")
+				{
+					outputArray = ReSynthesis(sampleArray, sample.Width, sample.Height, N, M, polish, indexed, OW, OH);
+					filename += $"M={M} polish={polish}";
+				}
+				else continue;
 
 				Bitmap output = new Bitmap(OW, OH);
 				for (int j = 0; j < OW * OH; j++) output.SetPixel(j % OW, j / OW, Color.FromArgb(outputArray[j]));
-				output.Save(pass.ToString() + " " + name + " " + indexed.ToString() + " K=" + K + " N=" + N + " t=" + t + " " + i + ".bmp");
+				output.Save($"{filename} {i}.bmp");
 			}
 
 			pass++;
 		}
+
+		Console.WriteLine($"time = {sw.ElapsedMilliseconds}");
 	}
 
 	static List<int>[] Analysis(int[] bitmap, int width, int height, int K, int N, bool indexed)
@@ -81,7 +101,7 @@ class Program
 
 			for (int k = 1; k < K; k++)
 			{
-				double max = -10000;
+				double max = -1E-4;
 				int argmax = -1;
 
 				foreach (int p in copy)
@@ -108,7 +128,7 @@ class Program
 		int?[] origins = new int?[OW * OH];
 		Random random = new Random();
 
-		for (int i = 0; i < OW * OH; i++)
+		for (int i = 0; i < result.Length; i++)
 		{
 			int x = i % OW, y = i / OW;
 			var candidates = new Dictionary<int, double>();
@@ -125,7 +145,7 @@ class Program
 							int ox = (p % SW - dx + SW) % SW, oy = (p / SW - dy + SH) % SH;
 							double s = Similarity(oy * SW + ox, sample, SW, SH, i, result, OW, OH, N, origins, indexed);
 
-							if (!mask[ox, oy]) candidates.Add(ox + oy * SW, Math.Pow(100, s / t));
+							if (!mask[ox, oy]) candidates.Add(ox + oy * SW, Math.Pow(1E+2, s / t));
 							mask[ox, oy] = true;
 						}
 					}
@@ -151,10 +171,10 @@ class Program
 			origins[x + y * OW] = -1;
 		}
 
-		for (int i = 0; i < OW * OH; i++)
+		for (int i = 0; i < result.Length; i++)
 		{
 			double[] candidates = new double[SW * SH];
-			double max = -10000;
+			double max = -1E+4;
 			int argmax = -1;
 
 			for (int j = 0; j < SW * SH; j++)
@@ -166,7 +186,7 @@ class Program
 					argmax = j;
 				}
 
-				if (indexed) candidates[j] = Math.Pow(100.0, s / t);
+				if (indexed) candidates[j] = Math.Pow(1E+2, s / t);
 			}
 
 			if (indexed) argmax = candidates.Random(random.NextDouble());
@@ -202,6 +222,179 @@ class Program
 			}
 
 		return sum;
+	}
+
+	static int[] ReSynthesis(int[] sample, int SW, int SH, int N, int M, int polish, bool indexed, int OW, int OH)
+	{
+		List<int> colors = new List<int>();
+		int[] indexedSample = new int[sample.Length];
+
+		for (int j = 0; j < SW * SH; j++)
+		{
+			int color = sample[j];
+
+			int i = 0;
+			foreach (var c in colors)
+			{
+				if (c == color) break;
+				i++;
+			}
+
+			if (i == colors.Count) colors.Add(color);
+			indexedSample[j] = i;
+		}
+
+		int colorsNumber = colors.Count;
+
+		Func<int, int, double> metric = (c1, c2) =>
+		{
+			Color color1 = Color.FromArgb(c1), color2 = Color.FromArgb(c2);
+			const double lambda = 1.0 / (20.0 * 65536.0);
+			double r = 1.0 + lambda * (double)((color1.R - color2.R) * (color1.R - color2.R));
+			double g = 1.0 + lambda * (double)((color1.G - color2.G) * (color1.G - color2.G));
+			double b = 1.0 + lambda * (double)((color1.B - color2.B) * (color1.B - color2.B));
+			return -Math.Log(r * g * b);
+		};
+
+		double[][] colorMetric = null;
+		if (!indexed && colorsNumber <= 1024)
+		{
+			colorMetric = new double[colorsNumber][];
+			for (int x = 0; x < colorsNumber; x++)
+			{
+				colorMetric[x] = new double[colorsNumber];
+				for (int y = 0; y < colorsNumber; y++)
+				{
+					int cx = colors[x], cy = colors[y];
+					colorMetric[x][y] = metric(cx, cy);
+				}
+			}
+		}
+
+		int[] origins = new int[OW * OH];
+		for (int i = 0; i < origins.Length; i++) origins[i] = -1;
+		Random random = new Random();
+
+		int[] shuffle = new int[OW * OH];
+		for (int i = 0; i < shuffle.Length; i++)
+		{
+			int j = random.Next(i + 1);
+			if (j != i) shuffle[i] = shuffle[j];
+			shuffle[j] = i;
+		}
+
+		for (int round = 0; round <= polish; round++) for (int counter = 0; counter < shuffle.Length; counter++)
+			{
+				int f = shuffle[counter];
+				int fx = f % OW, fy = f / OW;
+				int neighborsNumber = round > 0 ? 8 : Math.Min(8, counter);
+				int neighborsFound = 0;
+
+				int[] candidates = new int[neighborsNumber + M];
+
+				if (neighborsNumber > 0)
+				{
+					int[] neighbors = new int[neighborsNumber];
+					int[] x = new int[4], y = new int[4];
+
+					for (int radius = 1; neighborsFound < neighborsNumber; radius++)
+					{
+						x[0] = fx - radius;
+						y[0] = fy - radius;
+						x[1] = fx - radius;
+						y[1] = fy + radius;
+						x[2] = fx + radius;
+						y[2] = fy + radius;
+						x[3] = fx + radius;
+						y[3] = fy - radius;
+
+						for (int k = 0; k < 2 * radius; k++)
+						{
+							for (int d = 0; d < 4; d++)
+							{
+								x[d] = (x[d] + 10 * OW) % OW;
+								y[d] = (y[d] + 10 * OH) % OH;
+
+								if (neighborsFound >= neighborsNumber) continue;
+								int point = x[d] + y[d] * OW;
+								if (origins[point] != -1)
+								{
+									neighbors[neighborsFound] = point;
+									neighborsFound++;
+								}
+							}
+
+							y[0]++;
+							x[1]++;
+							y[2]--;
+							x[3]--;
+						}
+					}
+
+
+					for (int n = 0; n < neighborsNumber; n++)
+					{
+						int cx = (origins[neighbors[n]] + (f - neighbors[n]) % OW + 100 * SW) % SW;
+						int cy = (origins[neighbors[n]] / SW + f / OW - neighbors[n] / OW + 100 * SH) % SH;
+						candidates[n] = cx + cy * SW;
+					}
+				}
+
+				for (int m = 0; m < M; m++) candidates[neighborsNumber + m] = random.Next(SW * SH);
+
+				double max = -1E+10;
+				int argmax = -1;
+
+				for (int c = 0; c < candidates.Length; c++)
+				{
+					double sum = 1E-6 * random.NextDouble();
+					int ix = candidates[c] % SW, iy = candidates[c] / SW, jx = f % OW, jy = f / OW;
+					int SX, SY, FX, FY, S, F;
+					int origin;
+
+					for (int dy = -N; dy <= N; dy++) for (int dx = -N; dx <= N; dx++) if (dx != 0 || dy != 0)
+							{
+								SX = ix + dx;
+								if (SX < 0) SX += SW;
+								else if (SX >= SW) SX -= SW;
+
+								SY = iy + dy;
+								if (SY < 0) SY += SH;
+								else if (SY >= SH) SY -= SH;
+
+								FX = jx + dx;
+								if (FX < 0) FX += OW;
+								else if (FX >= OW) FX -= OW;
+
+								FY = jy + dy;
+								if (FY < 0) FY += OH;
+								else if (FY >= OH) FY -= OH;
+
+								S = SX + SY * SW;
+								F = FX + FY * OW;
+
+								origin = origins[F];
+								if (origin != -1)
+								{
+									if (indexed) sum += sample[origin] == sample[S] ? 1 : -1;
+									else if (colorMetric != null) sum += colorMetric[indexedSample[origin]][indexedSample[S]];
+									else sum += metric(sample[origin], sample[S]);
+								}
+							}
+
+					if (sum >= max)
+					{
+						max = sum;
+						argmax = candidates[c];
+					}
+				}
+
+				origins[f] = argmax;
+			}
+
+		int[] result = new int[OW * OH];
+		for (int i = 0; i < result.Length; i++) result[i] = sample[origins[i]];
+		return result;
 	}
 }
 
