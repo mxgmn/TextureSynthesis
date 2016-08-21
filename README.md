@@ -10,6 +10,8 @@ The algorithms are:
 
 Note that our implementations are not completely true to the original papers.
 
-Watch a video demonstration of P. F. Harrison's algorithm on YouTube: [https://www.youtube.com/watch?v=8sUMBMpZNzk](https://www.youtube.com/watch?v=8sUMBMpZNzk).
+Watch a video demonstration of P. F. Harrison's algorithm on YouTube.[YouTube](https://www.youtube.com/watch?v=8sUMBMpZNzk).
 
-![](http://i.imgur.com/jO7YzUY.gif)
+<div style="text-align:center; width: 100%;">
+<img src ="http://i.imgur.com/jO7YzUY.gif">
+</div>
