@@ -1,6 +1,4 @@
-![](http://i.imgur.com/mHWYFXt.png)
-![](http://i.imgur.com/UJnnryW.png)
-![](http://i.imgur.com/7O1zU4R.png)
+<p align="center"><img src="http://i.imgur.com/fdb7B52.png"></p>
 
 The algorithms are:
 
@@ -12,4 +10,8 @@ Note that our implementations are not completely true to the original papers.
 
 Watch a video demonstration of P. F. Harrison's algorithm on YouTube: [https://www.youtube.com/watch?v=8sUMBMpZNzk](https://www.youtube.com/watch?v=8sUMBMpZNzk).
 
-![](http://i.imgur.com/jO7YzUY.gif)
+<p align="center"><img src="http://i.imgur.com/jO7YzUY.gif"></p>
+<p align="center">
+	<img src="http://i.imgur.com/E5prVhn.png">
+	<img src="http://i.imgur.com/UJnnryW.png">
+</p>
