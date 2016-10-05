@@ -26,7 +26,7 @@ static class Program
 		xdoc.Load("samples.xml");
 		int pass = 1;
 
-		for (var xnode = xdoc.FirstChild.FirstChild; xnode != null; xnode = xnode.NextSibling)
+		foreach (XmlNode xnode in xdoc.FirstChild.ChildNodes)
 		{
 			string name = xnode.Get("name", ""), method = xnode.Name;
 			int K = xnode.Get("K", 1), N = xnode.Get("N", 1), M = xnode.Get("M", 20), polish = xnode.Get("polish", 3), OW = xnode.Get("width", 32), OH = xnode.Get("height", 32);
@@ -404,7 +404,7 @@ static class Stuff
 	{
 		string s = ((XmlElement)node).GetAttribute(attribute);
 		var converter = TypeDescriptor.GetConverter(typeof(T));
-		return s == "" ? defaultT : (T)converter.ConvertFromString(s);
+		return s == "" ? defaultT : (T)converter.ConvertFromInvariantString(s);
 	}
 
 	public static int Random(this double[] array, double r)
