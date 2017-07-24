@@ -10,9 +10,9 @@ The software is provided "as is", without warranty of any kind, express or impli
 */
 
 using System;
-using System.Xml;
 using System.Linq;
 using System.Drawing;
+using System.Xml.Linq;
 using System.Diagnostics;
 using System.ComponentModel;
 using System.Collections.Generic;
@@ -22,46 +22,45 @@ static class Program
 	static void Main()
 	{
 		Stopwatch sw = Stopwatch.StartNew();
-		var xdoc = new XmlDocument();
-		xdoc.Load("samples.xml");
+		XDocument xdoc = XDocument.Load("samples.xml");
 		int pass = 1;
 
-		foreach (XmlNode xnode in xdoc.FirstChild.ChildNodes)
+		foreach (XElement xelem in xdoc.Root.Elements("sample"))
 		{
-			string name = xnode.Get("name", ""), method = xnode.Name;
-			int K = xnode.Get("K", 1), N = xnode.Get("N", 1), M = xnode.Get("M", 20), polish = xnode.Get("polish", 3), OW = xnode.Get("width", 32), OH = xnode.Get("height", 32);
-			bool indexed = xnode.Get("indexed", true);
-			double t = xnode.Get("temperature", 1.0);
+			string name = xelem.Get<string>("name"), method = xelem.Get<string>("method");
+			int K = xelem.Get("K", 1), N = xelem.Get("N", 1), M = xelem.Get("M", 20), polish = xelem.Get("polish", 3), OW = xelem.Get("width", 32), OH = xelem.Get("height", 32);
+			bool indexed = xelem.Get("indexed", true);
+			double t = xelem.Get("temperature", 1.0);
 
-			Bitmap sample = new Bitmap($"Samples/{name}.bmp");
+			Bitmap sample = new Bitmap($"Samples/{name}.png");
 			List<int>[] similaritySets = null;
 
 			int[] sampleArray = new int[sample.Width * sample.Height];
 			for (int j = 0; j < sample.Width * sample.Height; j++) sampleArray[j] = sample.GetPixel(j % sample.Width, j / sample.Width).ToArgb();
 
-			if (method == "coherent")
+			if (method == "Coherent")
 			{
 				Console.WriteLine($"< {name}");
 				similaritySets = Analysis(sampleArray, sample.Width, sample.Height, K, N, indexed);
 			}
 
-			for (int i = 0; i < xnode.Get("screenshots", 1); i++)
+			for (int i = 0; i < xelem.Get("screenshots", 1); i++)
 			{
 				Console.WriteLine($"> {name} {i}");
 				string filename = $"{pass} {method} {name} {indexed} N={N} ";
 				int[] outputArray;
 
-				if (method == "full")
+				if (method == "Full")
 				{
 					outputArray = FullSynthesis(sampleArray, sample.Width, sample.Height, N, OW, OH, t, indexed);
 					filename += $"t={t}";
 				}
-				else if (method == "coherent")
+				else if (method == "Coherent")
 				{
 					outputArray = CoherentSynthesis(sampleArray, sample.Width, sample.Height, similaritySets, N, OW, OH, t, indexed);
 					filename += $"K={K} t={t}";
 				}
-				else if (method == "re")
+				else if (method == "Harrison")
 				{
 					outputArray = ReSynthesis(sampleArray, sample.Width, sample.Height, N, M, polish, indexed, OW, OH);
 					filename += $"M={M} polish={polish}";
@@ -70,7 +69,7 @@ static class Program
 
 				Bitmap output = new Bitmap(OW, OH);
 				for (int j = 0; j < OW * OH; j++) output.SetPixel(j % OW, j / OW, Color.FromArgb(outputArray[j]));
-				output.Save($"{filename} {i}.bmp");
+				output.Save($"{filename} {i}.png");
 			}
 
 			pass++;
@@ -246,7 +245,7 @@ static class Program
 
 		int colorsNumber = colors.Count;
 
-		Func<int, int, double> metric = (c1, c2) =>
+		double metric(int c1, int c2)
 		{
 			Color color1 = Color.FromArgb(c1), color2 = Color.FromArgb(c2);
 			const double lambda = 1.0 / (20.0 * 65536.0);
@@ -400,11 +399,10 @@ static class Program
 
 static class Stuff
 {
-	public static T Get<T>(this XmlNode node, string attribute, T defaultT = default(T))
+	public static T Get<T>(this XElement xelem, string attribute, T defaultT = default(T))
 	{
-		string s = ((XmlElement)node).GetAttribute(attribute);
-		var converter = TypeDescriptor.GetConverter(typeof(T));
-		return s == "" ? defaultT : (T)converter.ConvertFromInvariantString(s);
+		XAttribute a = xelem.Attribute(attribute);
+		return a == null ? defaultT : (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(a.Value);
 	}
 
 	public static int Random(this double[] array, double r)
@@ -413,16 +411,16 @@ static class Stuff
 
 		if (sum <= 0) 
 		{
-			for (int j = 0; j < array.Count(); j++) array[j] = 1;
+			for (int j = 0; j < array.Length; j++) array[j] = 1;
 			sum = array.Sum();
 		}
 
-		for (int j = 0; j < array.Count(); j++) array[j] /= sum;
+		for (int j = 0; j < array.Length; j++) array[j] /= sum;
 
 		int i = 0;
 		double x = 0;
 
-		while (i < array.Count())
+		while (i < array.Length)
 		{
 			x += array[i];
 			if (r <= x) return i;
@@ -432,5 +430,5 @@ static class Stuff
 		return 0;
 	}
 
-	public static int Random(this Dictionary<int, double> dic, double r) { return dic.Keys.ToArray()[dic.Values.ToArray().Random(r)]; }
+	public static int Random(this Dictionary<int, double> dic, double r) => dic.Keys.ToArray()[dic.Values.ToArray().Random(r)];
 }
