@@ -15,3 +15,5 @@ Watch a video demonstration of P. F. Harrison's algorithm on YouTube: [https://w
 	<img src="http://i.imgur.com/E5prVhn.png">
 	<img src="http://i.imgur.com/UJnnryW.png">
 </p>
+
+Guilherme Rossato wrote [build instructions for Windows](https://github.com/mxgmn/SynTex/pull/3/files).
