@@ -1,4 +1,4 @@
-<p align="center"><img src="http://i.imgur.com/fdb7B52.png"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/mxgmn/Blog/master/resources/texture-synthesis.png"></p>
 
 The algorithms are:
 
