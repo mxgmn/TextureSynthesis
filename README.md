@@ -14,8 +14,6 @@ Watch a video demonstration of P. F. Harrison's algorithm on YouTube: [https://w
 <p align="center"><img src="images/ultima.png"></p>
 <p align="center"><img src="images/swords.png"></p>
 
-Guilherme Rossato wrote [build instructions for Windows](https://github.com/mxgmn/SynTex/pull/3/files).
-
 ## How to build
 This is a console application that depends only on the standard library. Get [.NET Core](https://dotnet.microsoft.com/download) for Windows, Linux or macOS and run
 ```
