@@ -32,7 +32,7 @@ static class Program
 			bool indexed = xelem.Get("indexed", true);
 			double t = xelem.Get("temperature", 1.0);
 
-			Bitmap sample = new Bitmap($"Samples/{name}.png");
+			Bitmap sample = new Bitmap($"samples/{name}.png");
 			List<int>[] similaritySets = null;
 
 			int[] sampleArray = new int[sample.Width * sample.Height];

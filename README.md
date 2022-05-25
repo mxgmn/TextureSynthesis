@@ -1,4 +1,4 @@
-<p align="center"><img src="https://raw.githubusercontent.com/mxgmn/Blog/master/resources/texture-synthesis.png"></p>
+<p align="center"><img src="images/top.png"></p>
 
 The algorithms are:
 
@@ -10,10 +10,8 @@ Note that my implementations are not completely true to the original papers.
 
 Watch a video demonstration of P. F. Harrison's algorithm on YouTube: [https://www.youtube.com/watch?v=8sUMBMpZNzk](https://www.youtube.com/watch?v=8sUMBMpZNzk).
 
-<p align="center"><img src="http://i.imgur.com/jO7YzUY.gif"></p>
-<p align="center">
-	<img src="http://i.imgur.com/E5prVhn.png">
-	<img src="http://i.imgur.com/UJnnryW.png">
-</p>
+<p align="center"><img src="images/harrison.gif"></p>
+<p align="center"><img src="images/ultima.png"></p>
+<p align="center"><img src="images/swords.png"></p>
 
 Guilherme Rossato wrote [build instructions for Windows](https://github.com/mxgmn/SynTex/pull/3/files).
